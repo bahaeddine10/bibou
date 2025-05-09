@@ -1,0 +1,99 @@
+/* app/chatbot/Chatbot.module.css */
+.chatbotContainer {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 350px;
+    max-width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.chatHeader {
+    background-color: #004571;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.chatTitle {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chatWindow {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    height: 300px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background-color: #f7f7f7;
+}
+
+.placeholder {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+.userMessage {
+    text-align: right;
+    background-color: #014471;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 5px 0;
+    max-width: 70%; /* Limit width */
+    align-self: flex-end; /* Align user messages to the right */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.botMessage {
+    text-align: left;
+    background-color: #014471;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 5px 0;
+    max-width: 70%; /* Limit width */
+    align-self: flex-start; /* Align bot messages to the left */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.inputForm {
+    display: flex;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+    transition: border-color 0.3s;
+    color: black;
+}
+
+.input:focus {
+    border-color: #004571; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.sendButton {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #004571;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sendButton:hover {
+    background-color: #005bb5; /* Darker shade on hover */
+}

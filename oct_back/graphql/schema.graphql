@@ -1,0 +1,658 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+
+"Indicates what fields are available at the top level of a query operation."
+
+type Query {
+    "Find a single user by an identifying attribute."
+    user(
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find
+
+    arretsByMatricule(matricule: String!): [ArretReprise] @field(resolver: "App\\GraphQL\\Resolvers\\ArretRepriseResolver@resolveByMatricule")
+
+
+    "Retrieve all users."
+    users: [OracleUser] @field(resolver: "App\\GraphQL\\Resolvers\\UsersResolver@resolveUsers")
+
+    conges: [Conge] @field(resolver: "App\\GraphQL\\Resolvers\\CongeResolver@resolveConges")
+
+    "Retrieve solde by IDT_MATAG."
+    SoldeConge(idt_matag: String!): SoldeCongeSolde @field(resolver: "App\\GraphQL\\Queries\\SoldeCongeQuery@resolve")
+
+    congesByMatricule(matricule: String!): [Conge] @field(resolver: "App\\GraphQL\\Resolvers\\CongeResolver@resolveCongesByMatricule")
+
+    mvtconByMatricule(matricule: String!): [MvtCong] @field(resolver: "App\\GraphQL\\Queries\\MvtCongQuery@resolve")
+
+    congesByDepartment(departmentId: String!): [Conge] @field(resolver: "App\\GraphQL\\Resolvers\\CongeResolver@resolveCongesByDepartment")
+
+    allConges: [Conge] @field(resolver: "App\\GraphQL\\Resolvers\\CongeResolver@resolveAllConges")
+
+    ficheDePaie(idt_matag: String!, mois: Int!, annee: Int!): FichePaieGrouped @field(resolver: "App\\GraphQL\\Queries\\FichePaieQuery@resolve")
+
+    testMvtPaie(idt_matag: String!): [TestMvtPaieItem] @field(resolver: "App\\GraphQL\\Queries\\TestMvtPaieQuery@resolve")
+
+    ficheIdentite(idt_matag: String!): FicheIdentite
+     @field(resolver: "App\\GraphQL\\Queries\\FicheIdentiteQuery@resolve")
+
+    ficheSalaire(idt_matag: String!, mois: Int!, annee: Int!): FicheSalaireGrouped @field(resolver: "App\\GraphQL\\Queries\\FicheSalaireQuery@resolve")
+
+    usersByDepartment(departmentId: String!, matricule: String): [UserMinimal] @field(resolver: "App\\GraphQL\\Resolvers\\UserResolver@usersByDepartment")
+    
+    # Récupérer une mission par ID
+    mission(id: ID!): Mission @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@resolveMissionById")
+
+    allVoitures: [Voiture]! @field(resolver: "App\\GraphQL\\Resolvers\\VoituresResolver@all")
+    voiture(id: Int!): Voiture @field(resolver: "App\\GraphQL\\Resolvers\\VoituresResolver@byId")
+
+    # Récupérer toutes les missions
+    missions: [Mission] @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@resolveAllMissions")
+
+    allUsers: [User]! @field(resolver: "App\\GraphQL\\Resolvers\\UserResolver@allUsers")
+
+    chauffeursEnActivite: [Chauffeur!] @field(resolver: "App\\GraphQL\\Queries\\ChauffeursQuery@resolve")
+
+    voituresDisponibles: [Voiture!] @field(resolver: "App\\GraphQL\\Queries\\VoituresQuery@resolve")
+
+    activeUsers: [UserMinimal] @field(resolver: "App\\GraphQL\\Resolvers\\UserResolver@activeUsers")
+
+
+ # Affiche tous les arret/reprise où status_chef = 1
+    acceptedArretsByChef: [ArretReprise] @field(resolver: "App\\GraphQL\\Resolvers\\ArretRepriseResolver@resolveAcceptedByChef")
+
+    # Affiche tous les arret/reprise pour un département donné
+    arretsByDepartment(departmentId: String!): [ArretReprise] @field(resolver: "App\\GraphQL\\Resolvers\\ArretRepriseResolver@resolveByDepartment")
+
+    allDemandesVoiture: [DemandeVoiture] @field(resolver: "App\\GraphQL\\Resolvers\\DemandeVoitureResolver@all")
+    demandesVoitureByMatricule(matricule: String!): [DemandeVoiture] @field(resolver: "App\\GraphQL\\Resolvers\\DemandeVoitureResolver@byMatricule")
+    demandesVoitureByDepartment(departmentId: String!): [DemandeVoiture] @field(resolver: "App\\GraphQL\\Resolvers\\DemandeVoitureResolver@byDepartment")
+
+    missions: [Mission] @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@resolveAllMissions")
+
+    missionsByMatricule(matricule: String!): [Mission] 
+    @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@resolveMissionsByMatricule")
+
+
+    allDemandesGenerales: [DemandeGenerale] 
+    @field(resolver: "App\\GraphQL\\Resolvers\\DemandeGeneraleResolver@resolveAll")
+
+    demandesGeneralesByMatricule(matricule: String!): [DemandeGenerale] 
+    @field(resolver: "App\\GraphQL\\Resolvers\\DemandeGeneraleResolver@resolveByMatricule")
+
+      allTypesDemandeGenerale: [TypeDemandeGenerale] @field(resolver: "App\\GraphQL\\Resolvers\\DemandeGeneraleResolver@types")
+
+    "Récupère une liste de notes, potentiellement filtrée par matricule et/ou année"
+    notes(
+        matricule: String @eq
+        annee: Int @eq
+    ): [Note!]! @all
+    # Alternative avec pagination:
+    # notesPaginated(
+    #     matricule: String @eq
+    #     annee: Int @eq
+    # ): NotePaginator! @paginate(model: "App\\Models\\Note")
+
+}
+type UserMinimal {
+  matricule: String
+  nom: String
+  prenom: String
+}
+
+type TestMvtPaieItem {
+  idt_matag: String
+  mois_p: Int
+  annee_p: Int
+  mvp_datech: DateTime
+  mvp_mnt: Float
+  num_paie: Int
+}
+
+type Chauffeur {
+  IDT_MATAG: String
+  IDT_NOMAG: String
+  IDT_PRNAG: String
+}
+
+type DemandeGenerale {
+  id: Int!
+  nom: String!
+  prenom: String!
+  matricule: String!
+  type: Int!
+  type_label: String
+  status: String!
+  date_soumission: DateTime!
+  date_traitement: DateTime
+  document: String
+  document_url: String
+  department: String!
+  fonction: String!
+}
+
+
+
+type FicheIdentite {
+  IDT_MATAG: String
+  NOM: String
+  NOMAR: String
+  PRENOM: String
+  PRENOMAR: String
+
+  CIN: String
+  ADHERENT: String
+  ADRESSE: String
+  DATE_RECRUTEMENT: DateTime
+  DATE_TITULARISATION: DateTime
+  DATE_FONCTION: DateTime
+
+  POSITION: String
+  DATE_POSITION: DateTime
+  SOUS_POSITION: String
+  DATE_SOUS_POSITION: DateTime
+
+  SERVICE: String
+  BANQUE: String
+  RIB: String
+  CATEGORIE: String
+  ECHELLE: String
+  ECHELON: String
+  DATE_ECHELON: DateTime
+  DATE_CATEGORIE: DateTime
+  CLASSE: String
+  DATE_CLASSE: DateTime
+  SEXE: String
+  NOMBRE_ENFANTS: Int
+  ENFANTS_LISTE: [Child!]
+  CONJOINT: Conjoint
+  IDENTIFIANT_UNIQUE: String
+  EMPLOI: String
+  FONCTION: String
+  AFFECTATION: String
+  REGIME: String
+  DATE_NAISSANCE: DateTime
+
+}
+
+
+
+
+
+type FichePaieItem {
+  ind_code: Int
+  ind_dsg: String
+  mvp_mnt: Float
+  sens: Int
+  tp_paie: String
+}
+
+type FicheSalaireGrouped {
+  gains_fixe: [FichePaieItem!]!
+  gains_variable: [FichePaieItem!]!
+  retenues_fixe: [FichePaieItem!]!
+  retenues_variable: [FichePaieItem!]!
+  salaire_de_base: FichePaieItem
+  prc: FichePaieItem
+  salaire_brut: Float!
+  net_a_payer: Float!
+  cum_imposable: Float
+  cum_irpp: Float
+  retenues_sociales: [RetenueSociale!]!
+  capital_deces: [CapitalDeces!]!
+}
+
+
+
+
+type RetenueSociale {
+  RET_CODE: Int
+  libelle_ar: String
+  montant: Float
+}
+
+type CapitalDeces {
+  LIBELLE: String
+  CAPITAL: Float
+  TAUX_A: Float
+  MNT_PRIME: Float
+}
+
+"Account of a person who utilizes this application."
+type User {
+  id: Int!
+  nom: String!
+  prenom: String!
+  email: String!
+  matricule: String!
+  department: String
+  role: String
+  isValidator: Boolean     
+  isSuperAdmin: Boolean     
+  departmentId: String 
+  modules: [Module!]!
+
+
+}
+type Module {
+  id: Int!
+  name: String!
+}
+
+type Child {
+  ENF_PRN: String
+  ENF_PRNAR: String
+  ENF_JFNM: String
+  ENF_DATNAIS: DateTime
+  ENF_RANG: String
+  CON_RANG: String
+  CON_NOM: String
+  CON_PRN: String
+}
+type Conjoint {
+  CON_NOM: String
+  CON_PRN: String
+  CON_NOMAR: String
+  CON_PRNAR: String
+  CON_DATNAIS: DateTime
+}
+
+
+type SoldeCongeSolde {
+  solde: Float
+}
+
+type MvtCong {
+  idt_matag: String
+  mvc_datdeb: DateTime
+  mvc_datfin: DateTime
+  type_label: String
+  type_label_ar: String
+}
+
+type OracleUser {
+    IDT_MATAG: String
+}
+type TestTable {
+  id: Int  
+  name: String  
+  created_at: DateTime  
+}
+type SoldeConge {
+    ann_an: String
+    idt_matag: String
+    dcg_mois: Int
+    dcg_droit: Float
+    dcg_pris: Float
+    dcg_valide: Boolean
+    util: String
+    op: String
+    datop: DateTime
+    rest_div: Float
+    cum_abs: Float
+    tp: String
+    dt_fin: DateTime
+}
+
+type FichePaieItem {
+  ind_code: Int
+  ind_dsg: String
+  mvp_mnt: Float
+  sens: Int
+  tp_paie: String
+}
+
+
+
+type Mutation {
+  login(
+    email: String! @rules(apply: ["required", "email"])
+    password: String! @rules(apply: ["required", "string"])
+  ): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\LoginMutation")
+
+    signup(
+    email: String! @rules(apply: ["required", "email", "unique:users,email"])
+    password: String! @rules(apply: ["required", "string", "min:2"])
+    matricule: String! @rules(apply: ["required", "string"])
+  ): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\SignupMutation")
+createConge(
+    nom: String! @rules(apply: ["required", "string"]),
+    prenom: String! @rules(apply: ["required", "string"]),
+    matricule: String!,
+    datedebut: DateTime! @rules(apply: ["required"]),
+    datefin: DateTime! @rules(apply: ["required"]),
+    datedebutchef: DateTime! @rules(apply: ["required"]),
+    datefinchef: DateTime! @rules(apply: ["required"]),
+    duree: Float! @rules(apply: ["required"]), 
+    etatchef: Int! @rules(apply: ["required"]),
+    etatrh: Int! @rules(apply: ["required"]),
+    typeconge: Int! @rules(apply: ["required", "numeric"])
+    typecongear: Int! @rules(apply: ["required", "numeric"])
+
+    certificat: Upload 
+): Conge @field(resolver: "App\\GraphQL\\Mutations\\CongeMutation@create")
+
+updateConge(
+    id: Int! @rules(apply: ["required", "exists:conges,id"]),
+    nom: String @rules(apply: ["string"]),
+    prenom: String @rules(apply: ["string"]),
+    datedebut: DateTime,
+    datefin: DateTime,
+    duree: Int @rules(apply: ["integer"]),
+    etatchef: Int @rules(apply: ["string"]),
+    etatrh: Int @rules(apply: ["string"]),
+    typeconge: Int @rules(apply: ["numeric"])
+    certificat: String 
+): Conge @field(resolver: "App\\GraphQL\\Mutations\\CongeMutation@update")
+
+
+updateCongeByChef(
+  id: Int!
+  datedebutchef: DateTime
+  datefinchef: DateTime
+  duree: Float      
+  etatchef: Int
+  chefName: String
+  chefID: Int
+  replacementName: String      
+  replacementMatricule: Int    
+): Conge @field(resolver: "App\\GraphQL\\Mutations\\CongeMutation@updateByChef")
+
+
+  updateCongeByRH(
+    id: Int!
+    etatrh: Int!
+  ): Conge @field(resolver: "App\\GraphQL\\Mutations\\CongeMutation@updateByRH")
+
+  createVoiture(
+    matricule: String!
+    marque: String!
+    modele: String!
+    disponibilite: Int!
+  ): Voiture @field(resolver: "App\\GraphQL\\Resolvers\\VoituresResolver@create")
+
+  updateVoiture(
+    id: Int!
+    matricule: String
+    marque: String
+    modele: String
+    disponibilite: Int
+  ): Voiture @field(resolver: "App\\GraphQL\\Resolvers\\VoituresResolver@update")
+
+  deleteVoiture(id: Int!): Boolean @field(resolver: "App\\GraphQL\\Resolvers\\VoituresResolver@delete")
+
+
+
+    # Créer une nouvelle mission
+  createMission(
+  datedebut: DateTime!
+  datefin: DateTime!
+  fromlocation: String!
+  tolocation: String!
+  sujet: String!
+  nom: String
+  residence: String
+  accompagnant: String
+  matricule: String
+  fonction: String
+  department: String
+): Mission @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@resolveCreateMission")
+
+
+  assignModuleToUser(user_id: Int!, module_id: Int!): OperationResult @field(resolver: "App\\GraphQL\\Mutations\\RoleMutation@assignModule")
+  removeModuleFromUser(user_id: Int!, module_id: Int!): OperationResult @field(resolver: "App\\GraphQL\\Mutations\\RoleMutation@removeModule")
+
+
+    createArretReprise(
+    employee_name: String! @rules(apply: ["required"]),
+    position: String! @rules(apply: ["required"]),
+    matricule: String! @rules(apply: ["required"]),
+    department: String! @rules(apply: ["required"]),
+    departmentId: String! @rules(apply: ["required"]),
+    reason: String! @rules(apply: ["required"]),
+    date_time: DateTime! @rules(apply: ["required"]),
+    type_arret: Int! @rules(apply: ["required"]),
+    documents: [Upload]
+  ): ArretReprise @field(resolver: "App\\GraphQL\\Mutations\\ArretRepriseMutation@create")
+
+  # Mise à jour status_chef
+  updateStatusChef(
+    id: Int! @rules(apply: ["required", "exists:arret_reprise,id"]),
+    status_chef: Int! @rules(apply: ["required"])
+  ): ArretReprise @field(resolver: "App\\GraphQL\\Mutations\\ArretRepriseMutation@updateChefStatus")
+
+  # Mise à jour status_rh
+  updateStatusRH(
+    id: Int! @rules(apply: ["required", "exists:arret_reprise,id"]),
+    status_rh: Int! @rules(apply: ["required"])
+  ): ArretReprise @field(resolver: "App\\GraphQL\\Mutations\\ArretRepriseMutation@updateRHStatus")
+
+   createDemandeVoiture(
+    nom: String!
+    matricule: String!
+    date_debut: DateTime!
+    date_fin: DateTime!
+    accompagnant: String
+    departmentId: String!
+  ): DemandeVoiture @field(resolver: "App\\GraphQL\\Mutations\\DemandeVoitureMutation@create")
+
+  updateStatusChefVoiture(
+    id: Int!
+    status_chef: Int!
+  ): DemandeVoiture @field(resolver: "App\\GraphQL\\Mutations\\DemandeVoitureMutation@updateChefStatus")
+
+  updateStatusDmbVoiture(
+    id: Int!
+    status_dmb: Int!
+    chauffeur: String
+    voiture_matricule: String
+  ): DemandeVoiture @field(resolver: "App\\GraphQL\\Mutations\\DemandeVoitureMutation@updateDmbStatus")
+
+  updateStatusRHMission(
+  id: Int! @rules(apply: ["required", "exists:mission,id"]),
+  statusrh: String! @rules(apply: ["required"])
+  ): Mission @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@updateStatusRH")
+
+
+  updateStatusDMBMission(
+  id: Int! @rules(apply: ["required", "exists:mission,id"]),
+  statusdmb: String! @rules(apply: ["required"]),
+  voiture: String
+  chauffeur: String
+  ): Mission @field(resolver: "App\\GraphQL\\Resolvers\\MissionResolver@updateStatusDMB")
+
+  createDemandeGenerale(
+    nom: String!
+    prenom: String!
+    matricule: String!
+    type: Int!
+    department: String!
+    fonction: String!
+  ): DemandeGenerale 
+  @field(resolver: "App\\GraphQL\\Resolvers\\DemandeGeneraleResolver@create")
+
+  updateDemandeGenerale(
+    id: Int! @rules(apply: ["required", "exists:demande_generale,id"]),
+    status: String!
+    document: Upload
+  ): DemandeGenerale 
+  @field(resolver: "App\\GraphQL\\Resolvers\\DemandeGeneraleResolver@update")
+
+  "Insère une nouvelle note ou met à jour une note existante pour un matricule/année/trimestre donné"
+  upsertNote(input: UpsertNoteInput!): Note! @field(resolver: "App\\GraphQL\\Mutations\\UpsertNote@resolve")
+
+  "Met à jour plusieurs notes (trimestrielles et/ou globale) pour un matricule/année donné"
+  updateNotes(input: UpdateNotesInput!): Note @field(resolver: "App\\GraphQL\\Mutations\\UpdateNotes@resolve")
+
+}
+
+type TypeDemandeGenerale {
+  id: Int!
+  name: String!
+}
+
+
+type AuthPayload {
+  access_token: String!
+  token_type: String!
+  expires_in: Int!
+  user: User
+}
+type OperationResult {
+  success: Boolean!
+  message: String
+}
+
+type DemandeVoiture {
+  id: Int!
+  nom: String!
+  matricule: String!
+  date_debut: DateTime!
+  date_fin: DateTime!
+  accompagnant: String
+  status_chef: Int!
+  status_dmb: Int!
+  chauffeur: String
+  voiture_matricule: String
+  departmentId: String!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+type Voiture {
+  id: Int!
+  matricule: String!
+  marque: String!
+  modele: String!
+  disponibilite: Int!
+}
+
+type ArretReprise {
+  id: Int!
+  employee_name: String!
+  position: String!
+  department: String!
+  matricule: Int!
+  departmentId: String!
+  reason: String!
+  date_time: DateTime!
+  type_arret: Int!
+  documents: [String]
+  document_url: [String]
+  status_chef: Int!
+  status_rh: Int!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+
+type Conge {
+    id: Int!
+    nom: String!
+    prenom: String!
+    matricule: String!  
+    datedebut: DateTime!
+    datefin: DateTime!
+    duree: Float!
+    etatchef: Int!
+    etatrh: Int!
+    typeconge: Int!
+    type_label: String
+    type_label_ar: String
+    certificat: String
+    certificat_url: String 
+    replacementName: String
+    replacementMatricule: Int
+    datedebutchef: DateTime!
+    datefinchef: DateTime!
+    chefName: String
+    chefID: Int
+}
+
+
+# Définition du type Mission
+type Mission {
+  id: Int!
+  datedebut: DateTime!
+  datefin: DateTime!
+  fromlocation: String!
+  tolocation: String!
+  sujet: String!
+  nom: String
+  matricule: String
+  fonction: String
+  department: String
+  statusrh: String
+  statusdmb: String
+  chauffeur: String
+  voiture: String
+  residence: String
+  accompagnant: String
+
+  
+
+
+
+
+  
+}
+
+type Note {
+    id: ID!
+    matricule: String!
+    annee: Int!
+    "Note globale (son utilité est à clarifier)"
+    note: Float!
+    noteAnnTr1: Float!
+    noteAnnTr2: Float!
+    noteAnnTr3: Float!
+    noteAnnTr4: Float!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input UpsertNoteInput {
+    matricule: String! @rules(apply: ["required", "string", "max:5"])
+    annee: Int! @rules(apply: ["required", "integer"])
+    "Le trimestre concerné (1, 2, 3 ou 4)"
+    trimestre: Int! @rules(apply: ["required", "integer", "min:1", "max:4"])
+    "La note pour le trimestre spécifié"
+    note_trimestre: Float! @rules(apply: ["required", "numeric"])
+}
+
+input UpdateNotesInput {
+    "Le matricule de l'employé concerné"
+    matricule: String! @rules(apply: ["required", "string", "max:5"])
+    "L'année concernée"
+    annee: Int! @rules(apply: ["required", "integer"])
+
+    "Nouvelle valeur pour la note globale (optionnel)"
+    note: Float @rules(apply: ["numeric"])
+    "Nouvelle valeur pour la note du trimestre 1 (optionnel)"
+    noteAnnTr1: Float @rules(apply: ["numeric"])
+    "Nouvelle valeur pour la note du trimestre 2 (optionnel)"
+    noteAnnTr2: Float @rules(apply: ["numeric"])
+    "Nouvelle valeur pour la note du trimestre 3 (optionnel)"
+    noteAnnTr3: Float @rules(apply: ["numeric"])
+    "Nouvelle valeur pour la note du trimestre 4 (optionnel)"
+    noteAnnTr4: Float @rules(apply: ["numeric"])
+}
+
+# Si vous utilisez la pagination pour les notes, décommentez ceci :
+# type NotePaginator {
+#     data: [Note!]!
+#     paginatorInfo: PaginatorInfo!
+# }
+#
+# type PaginatorInfo {
+#     count: Int!
+#     currentPage: Int!
+#     firstItem: Int
+#     hasMorePages: Boolean!
+#     lastItem: Int
+#     lastPage: Int!
+#     perPage: Int!
+#     total: Int!
+# }
