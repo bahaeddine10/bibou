@@ -13,7 +13,7 @@ const translations = {
     typeOptions: {
       stop: "توقف",
       resume: "استئناف",
-      permission: "إذن بالخروج"
+      permission: "إذن بالخروج",
     },
     fullName: "الاسم الكامل",
     department: "القسم",
@@ -26,7 +26,7 @@ const translations = {
     submit: "إرسال الطلب",
     success: "تم إرسال الطلب بنجاح",
     error: "خطأ في إرسال الطلب",
-    networkError: "خطأ في الشبكة"
+    networkError: "خطأ في الشبكة",
   },
   fr: {
     title: "Demande Arrêt / Reprise",
@@ -35,7 +35,7 @@ const translations = {
     typeOptions: {
       stop: "Arrêt",
       resume: "Reprise",
-      permission: "Autorisation de Sortir"
+      permission: "Autorisation de Sortir",
     },
     fullName: "Nom Complet",
     department: "Département",
@@ -48,14 +48,14 @@ const translations = {
     submit: "Envoyer la demande",
     success: "Demande envoyée avec succès",
     error: "Erreur lors de l'envoi de la demande",
-    networkError: "Erreur réseau"
-  }
+    networkError: "Erreur réseau",
+  },
 };
 
 export default function DemandeArretReprisePage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const [lang, setLang] = useState<'ar' | 'fr'>('ar');
+  const [lang, setLang] = useState<"ar" | "fr">("ar");
   const t = translations[lang];
 
   const [position, setPosition] = useState("");
@@ -67,6 +67,7 @@ export default function DemandeArretReprisePage() {
   const employeeName = `${session?.user?.prenom ?? ""} ${session?.user?.nom ?? ""}`;
   const department = session?.user?.department ?? "";
   const departmentId = session?.user?.departmentId?.toString().padStart(6, "0") ?? "";
+
 
   useEffect(() => {
     const fetchPosition = async () => {
@@ -109,12 +110,12 @@ export default function DemandeArretReprisePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session) return;
-  
+
     const formData = new FormData();
-  
+
     const operations = JSON.stringify({
       query: `
-        mutation ($documents: [Upload!]) {
+        mutation ($documents: [Upload]) {
           createArretReprise(
             employee_name: "${employeeName}",
             position: "${position}",
@@ -132,14 +133,14 @@ export default function DemandeArretReprisePage() {
       `,
       variables: { documents: new Array(files?.length ?? 0).fill(null) },
     });
-  
+
     const map: Record<string, string[]> = {};
     if (files) {
       for (let i = 0; i < files.length; i++) {
         map[i] = [`variables.documents.${i}`];
       }
     }
-  
+
     formData.append("operations", operations);
     formData.append("map", JSON.stringify(map));
     if (files) {
@@ -147,15 +148,16 @@ export default function DemandeArretReprisePage() {
         formData.append(i.toString(), files[i]);
       }
     }
-  
+
     try {
       const res = await fetch("http://localhost:8000/graphql", {
         method: "POST",
         body: formData,
       });
-  
+
       const result = await res.json();
-  
+      console.log("GraphQL Response:", result);
+
       if (result.errors) {
         alert(t.error);
       } else {
@@ -173,7 +175,7 @@ export default function DemandeArretReprisePage() {
         <div className="flex justify-end mb-4">
           <select
             value={lang}
-            onChange={(e) => setLang(e.target.value as 'ar' | 'fr')}
+            onChange={(e) => setLang(e.target.value as "ar" | "fr")}
             className="border px-3 py-1 rounded text-black text-sm"
           >
             <option value="ar">العربية</option>
@@ -190,7 +192,7 @@ export default function DemandeArretReprisePage() {
               value={typeArret ?? ""}
               onChange={(e) => setTypeArret(e.target.value ? Number(e.target.value) : null)}
               required
-              className="w-full border px-3 py-2 rounded  text-black text-right"
+              className="w-full border px-3 py-2 rounded text-black text-right"
             >
               <option value="">{t.selectType}</option>
               <option value={0}>{t.typeOptions.stop}</option>
@@ -205,7 +207,7 @@ export default function DemandeArretReprisePage() {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded  text-black text-right"
+              className="w-full border px-3 py-2 rounded text-black text-right"
               placeholder={t.reasonPlaceholder}
             />
           </div>
@@ -217,7 +219,7 @@ export default function DemandeArretReprisePage() {
               value={dateTime}
               onChange={(e) => setDateTime(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded  text-black text-right"
+              className="w-full border px-3 py-2 rounded text-black text-right"
             />
           </div>
 
@@ -229,14 +231,14 @@ export default function DemandeArretReprisePage() {
               onChange={(e) => {
                 if (e.target.files) setFiles(e.target.files);
               }}
-              className="w-full  text-black text-right"
+              className="w-full text-black text-right"
             />
           </div>
 
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-[#004571] text-white px-6 py-2  rounded hover:bg-[#003a5e] transition-colors"
+              className="bg-[#004571] text-white px-6 py-2 rounded hover:bg-[#003a5e] transition-colors"
             >
               {t.submit}
             </button>

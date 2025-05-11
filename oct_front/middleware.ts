@@ -1,11 +1,11 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-// const secret = '2BoYHNlKnYxl4TThm+mG9anPKuuap4wD7HU/vMmeaeI=';
+
 
 export async function middleware(req: NextRequest) {
   // Retrieve the token
-  const token = await getToken({ req, secret : '2BoYHNlKnYxl4TThm+mG9anPKuuap4wD7HU/vMmeaeI=' });
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET  });
   console.log('req:', req.cookies); // Log the token for debugging
   console.log('Token:', token); // Log the token for debugging
   // If no token exists, redirect to the login page

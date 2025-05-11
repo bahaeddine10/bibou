@@ -151,7 +151,7 @@ export default function ListeUsersPage() {
             </h3>
             <div className="space-y-4">
               {allModules.map((mod) => (
-                <label key={mod.id} className="flex items-center">
+                <label key={mod.id} className="flex text-gray-500 items-center">
                   <input
                     type="checkbox"
                     checked={selectedModules.includes(mod.id)}

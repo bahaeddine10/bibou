@@ -51,7 +51,8 @@ const authOptions: NextAuthOptions = {
         const { email, password } = credentials as { email: string; password: string };
         
         try {
-          const res = await fetch("http://localhost:8000/graphql", {
+          
+          const res = await fetch(process.env.NEXT_PUBLIC_API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -187,7 +188,7 @@ const authOptions: NextAuthOptions = {
   },
   
   
-  secret: '2BoYHNlKnYxl4TThm+mG9anPKuuap4wD7HU/vMmeaeI=', // Secret for signing tokens
+  secret: process.env.NEXTAUTH_SECRET, // Secret for signing tokens
 };
 
 const handler = NextAuth(authOptions);

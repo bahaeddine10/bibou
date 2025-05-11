@@ -84,7 +84,7 @@ export default function CreateVoiturePage() {
           <select
             value={lang}
             onChange={(e) => setLang(e.target.value as "ar" | "fr")}
-            className="border px-3 py-1 rounded text-sm"
+            className="border px-3 py-1 rounded text-sm text-gray-700"
           >
             <option value="ar">العربية</option>
             <option value="fr">Français</option>
@@ -93,7 +93,7 @@ export default function CreateVoiturePage() {
 
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-4">
           <div>
-            <label className="block font-medium">{t.matricule}</label>
+            <label className="block font-medium text-gray-700">{t.matricule}</label>
             <input
               type="text"
               value={matricule}
@@ -104,33 +104,33 @@ export default function CreateVoiturePage() {
           </div>
 
           <div>
-            <label className="block font-medium">{t.marque}</label>
+            <label className="block font-medium  text-gray-700">{t.marque}</label>
             <input
               type="text"
               value={marque}
               onChange={(e) => setMarque(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-3 py-2 rounded text-gray-500"
             />
           </div>
 
           <div>
-            <label className="block font-medium">{t.modele}</label>
+            <label className="block font-medium  text-gray-700">{t.modele}</label>
             <input
               type="text"
               value={modele}
               onChange={(e) => setModele(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-3 py-2 rounded text-gray-500"
             />
           </div>
 
           <div>
-            <label className="block font-medium">{t.disponibilite}</label>
+            <label className="block font-medium  text-gray-700">{t.disponibilite}</label>
             <select
               value={disponibilite}
               onChange={(e) => setDisponibilite(parseInt(e.target.value))}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-3 py-2 rounded  text-gray-500"
             >
               <option value={1}>{t.oui}</option>
               <option value={0}>{t.non}</option>

@@ -66,7 +66,7 @@ export default function CombinedCongesPage() {
   };
 
   const normalize = (str: string) =>
-    str
+    (str || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .replace(/[’‘`´]/g, "'")

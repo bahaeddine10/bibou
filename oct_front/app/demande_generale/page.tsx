@@ -119,11 +119,11 @@ export default function DemandeGeneralePage() {
     <Layout title="Demande Générale">
       <div className="p-6">
         <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
-          <h2 className="text-xl font-bold text-center mb-4">📨 Nouvelle Demande Générale</h2>
+          <h2 className="text-xl font-bold text-center mb-4 text-black">📨 Nouvelle Demande Générale</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Type de Demande</label>
+              <label className="block text-sm font-medium mb-1 text-black">Type de Demande</label>
               <select
                 value={type}
                 onChange={(e) => setType(parseInt(e.target.value))}

@@ -121,7 +121,7 @@ export default function ListeVoituresPage() {
 
         <div className="overflow-x-auto bg-white shadow rounded-lg">
           <table className="min-w-full divide-y divide-gray-200 text-sm text-right">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-800 text-white">
               <tr>
                 <th className="px-4 py-2">{t.matricule}</th>
                 <th className="px-4 py-2">{t.marque}</th>
@@ -133,10 +133,10 @@ export default function ListeVoituresPage() {
             <tbody>
               {voitures.map((v) => (
                 <tr key={v.id} className="border-t">
-                  <td className="px-4 py-2">{v.matricule}</td>
-                  <td className="px-4 py-2">{v.marque}</td>
-                  <td className="px-4 py-2">{v.modele}</td>
-                  <td className="px-4 py-2">{v.disponibilite === 1 ? t.oui : t.non}</td>
+                  <td className="px-4 py-2 text-black">{v.matricule}</td>
+                  <td className="px-4 py-2 text-black">{v.marque}</td>
+                  <td className="px-4 py-2 text-black">{v.modele}</td>
+                  <td className="px-4 py-2 text-black">{v.disponibilite === 1 ? t.oui : t.non}</td>
                   <td className="px-4 py-2 text-center space-x-2">
                     <button
                       onClick={() => router.push(`/update_voiture?id=${v.id}`)}

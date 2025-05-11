@@ -112,7 +112,7 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
+                  className="w-full px-3 py-2 border text-gray-500 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
                   placeholder="Email"
                 />
               </div>
@@ -123,7 +123,7 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
+                  className="w-full px-3 py-2 border text-gray-500 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
                   placeholder="Mot de passe"
                 />
               </div>
@@ -134,7 +134,7 @@ export default function SignupPage() {
                   value={matricule}
                   onChange={(e) => setMatricule(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
+                  className="w-full px-3 py-2 border text-gray-500 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004571] focus:border-transparent transition-colors text-sm bg-white/80"
                   placeholder="Matricule"
                 />
               </div>

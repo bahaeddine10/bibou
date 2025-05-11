@@ -175,24 +175,24 @@ export default function DemandemissionPage() {
     <Layout title="📝 مطلب إذن بالمأمورية">
       <div className="p-6 pt-6 max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-6 text-right font-[cairo] leading-loose">
-          <h2 className="text-xl font-bold mb-4">📝 مطلب إذن بالمأمورية</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">📝 مطلب إذن بالمأمورية</h2>
 
           <div className="grid gap-4 mb-6">
           <div>
-              <label className="block mb-1">تاريخ الانطلاق</label>
-              <input type="date" className="w-full border p-2 rounded" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <label className="block mb-1 text-black">تاريخ الانطلاق</label>
+              <input type="date" className="w-full border p-2 rounded text-black" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </div>
 
             <div>
-              <label className="block mb-1">تاريخ الرجوع</label>
-              <input type="date" className="w-full border p-2 rounded" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <label className="block mb-1 text-black">تاريخ الرجوع</label>
+              <input type="date" className="w-full border p-2 rounded text-black" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
 
             <div>
-              <label className="block mb-1">الإقامة</label>
+              <label className="block mb-1 text-black">الإقامة</label>
               <input
                 type="text"
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded text-black"
                 value={residence.join(", ")}
                 onChange={(e) => setResidence(e.target.value.split(",").map((w) => w.trim()))}
                 placeholder="مثال: فندق المرادي، إقامة الجامعة"
@@ -200,8 +200,8 @@ export default function DemandemissionPage() {
             </div>
 
             <div>
-              <label className="block mb-1">من</label>
-              <select className="w-full h-12 text-lg border p-2 rounded" value={from} onChange={(e) => setFrom(e.target.value)}>
+              <label className="block mb-1 text-black">من</label>
+              <select className="w-full h-12 text-lg border p-2 rounded text-black " value={from} onChange={(e) => setFrom(e.target.value)}>
                 <option value="">اختر الولاية</option>
                 {wilayas.map((wilaya) => (
                   <option key={wilaya} value={wilaya}>{wilaya}</option>
@@ -210,8 +210,8 @@ export default function DemandemissionPage() {
             </div>
 
             <div>
-              <label className="block mb-1">إلى</label>
-              <select className="w-full h-12 text-lg border p-2 rounded" value={to[0] || ""} onChange={(e) => setTo([e.target.value])}>
+              <label className="block mb-1 text-black">إلى</label>
+              <select className="w-full h-12 text-lg border p-2 rounded text-black" value={to[0] || ""} onChange={(e) => setTo([e.target.value])}>
                 <option value="">اختر الولاية</option>
                 {wilayas.map((wilaya) => (
                   <option key={wilaya} value={wilaya}>{wilaya}</option>
@@ -220,7 +220,7 @@ export default function DemandemissionPage() {
             </div>
 
             <div>
-              <label className="block mb-1">موضوع المأمورية</label>
+              <label className="block mb-1 text-black" >موضوع المأمورية</label>
               <textarea className="w-full border p-2 rounded" rows={3} value={missionSubject} onChange={(e) => setMissionSubject(e.target.value)} placeholder="مثال: متابعة ملفات الموارد البشرية..." />
             </div>
           </div>
@@ -230,7 +230,7 @@ export default function DemandemissionPage() {
 
           </div>
             <div>
-              <label className="block mb-1">الأشخاص المرافقين</label>
+              <label className="block mb-1 text-black">الأشخاص المرافقين</label>
               <input
                 type="text"
                 placeholder="🔍 البحث..."
@@ -256,7 +256,7 @@ export default function DemandemissionPage() {
               </div>
               {selectedAccompagnants.length > 0 && (
   <div className="mt-4 p-2 border rounded bg-gray-50">
-    <p className="font-semibold mb-2">المرافقون المختارون:</p>
+    <p className="font-semibold mb-2 text-black">المرافقون المختارون:</p>
     <ul className="list-disc pl-5">
       {selectedAccompagnants.map((name, index) => (
         <li key={index}>{name}</li>
